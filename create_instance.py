@@ -84,7 +84,8 @@ def create_instance(compute, project, zone, name, bucket):
             'email': 'default',
             'scopes': [
                 'https://www.googleapis.com/auth/devstorage.read_write',
-                'https://www.googleapis.com/auth/logging.write'
+                'https://www.googleapis.com/auth/logging.write',
+                'https://www.googleapis.com/auth/cloud-platform'
             ]
         }],
 
@@ -148,7 +149,7 @@ def create_firewall(compute, project):
 
 
 # [START run]
-def main(project, zone, instance_name, wait=True):
+def main(project, zone, instance_name,bucket, wait=True):
     compute = googleapiclient.discovery.build('compute', 'v1')
 
     print('Creating instance.')
