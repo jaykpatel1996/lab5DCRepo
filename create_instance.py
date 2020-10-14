@@ -40,11 +40,10 @@ def list_instances(compute, project, zone):
 
 
 # [START create_instance]
-def create_instance(compute, project, zone, name, bucket):
+def create_instance(compute, project, zone, name):
     # Get the latest Debian Jessie image.
     image_response = compute.images().getFromFamily(
-        project='ubuntu-os-cloud', family='ubuntu-1804-lts').execute()
-    print(image_response)
+        project='debian-cloud', family='debian-9').execute()
     source_disk_image = image_response['selfLink']
 
     # Configure the machine
@@ -103,9 +102,6 @@ def create_instance(compute, project, zone, name, bucket):
             }, {
                 'key': 'text',
                 'value': image_caption
-            }, {
-                'key': 'bucket',
-                'value': bucket
             }]
         }
     }
@@ -144,17 +140,14 @@ def wait_for_operation(compute, project, zone, operation):
         time.sleep(1)
 # [END wait_for_operation]
 
-def create_firewall(compute, project):
-    compute.insert(project)
-
 
 # [START run]
-def main(project, zone, instance_name,bucket, wait=True):
+def main(project, bucket, zone, instance_name, wait=True):
     compute = googleapiclient.discovery.build('compute', 'v1')
 
     print('Creating instance.')
-    #create_firewall(compute,project)
-    operation = create_instance(compute, project, zone, instance_name, bucket)
+
+    operation = create_instance(compute, project, zone, instance_name)
     wait_for_operation(compute, project, zone, operation['name'])
 
     instances = list_instances(compute, project, zone)
@@ -169,14 +162,6 @@ It will take a minute or two for the instance to complete work.
 Check this URL: http://storage.googleapis.com/{}/output.png
 Once the image is uploaded press enter to delete the instance.
 """.format(bucket))
-
-    if wait:
-        input()
-
-    print('Deleting instance.')
-
-    operation = delete_instance(compute, project, zone, instance_name)
-    wait_for_operation(compute, project, zone, operation['name'])
 
 
 if __name__ == '__main__':
