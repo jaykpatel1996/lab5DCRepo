@@ -43,7 +43,7 @@ def list_instances(compute, project, zone):
 def create_instance(compute, project, zone, name):
     # Get the latest Debian Jessie image.
     image_response = compute.images().getFromFamily(
-        project='debian-cloud', family='debian-9').execute()
+        project='ubuntu-os-cloud', family='ubuntu-1804-lts').execute()
     source_disk_image = image_response['selfLink']
 
     # Configure the machine
